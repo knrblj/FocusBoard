@@ -1,0 +1,149 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KB Board</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="header"><i class="fas fa-rocket"></i> My Dashboard</h1>
+
+  <!-- Today's Summary -->
+  <section class="card card-summary">
+    <h2><i class="fas fa-calendar-day"></i> Today's Summary</h2>
+    <div id="greeting">Good day!</div>
+    <div id="summaryDate"></div>
+    <div id="summaryTime"></div>
+    <div id="taskCounter"><i class="fas fa-tasks"></i> <span>0</span> tasks pending</div>
+  </section>
+
+  <!-- To-Do List -->
+  <section class="card card-todo">
+    <div class="todo-header">
+      <h2><i class="fas fa-check-square"></i> To-Do List</h2>
+      <div id="todoFilters" class="todo-filters">
+        <button class="filter-btn" data-filter="all">All</button>
+        <button class="filter-btn active" data-filter="open">Open</button>
+        <button class="filter-btn" data-filter="closed">Closed</button>
+      </div>
+    </div>
+    <form id="todoForm">
+      <input type="text" id="todoInput" autocomplete="off" placeholder="Add a new task..." required />
+      <input type="text" id="todoStatusInput" autocomplete="off" placeholder="Status (e.g., Work)" />
+      <button type="submit"><i class="fas fa-plus"></i> Add</button>
+    </form>
+    <ul id="todoList"></ul>
+  </section>
+
+  <!-- Birthday Form -->
+  <section class="card card-birthday">
+    <h2><i class="fas fa-hourglass-half"></i> Age Calculator</h2>
+
+    <form id="birthdayForm">
+      <div class="form-group">
+        <input type="text" id="name" placeholder="Enter name" required />
+        <input type="date" id="dob" required />
+        <button type="submit"><i class="fas fa-calculator"></i> Calculate</button>
+      </div>
+    </form>
+
+    <div id="birthdayDisplay">
+      <div class="age-header">
+        <i class="fas fa-user-clock"></i>
+        <span id="personName"></span>
+      </div>
+
+      <div id="birthdayInfo" class="age-details"></div>
+
+      <div class="next-birthday">
+        <div class="birthday-progress">
+          <div class="progress-bar" id="birthdayProgress"></div>
+        </div>
+        <div id="nextBirthdayText">Days until next birthday: <span id="daysLeft">0</span></div>
+      </div>
+
+      <div id="birthdayActions">
+        <button id="editBirthdayBtn" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+        <button id="deleteBirthdayBtn" title="Delete"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card card-pomodoro">
+    <h2><i class="fas fa-clock"></i> Pomodoro Timer</h2>
+    <div class="pomodoro-container">
+      <div class="timer-display">
+        <span id="minutes">25</span>:<span id="seconds">00</span>
+      </div>
+      <div class="timer-mode">
+        <span id="timerMode">FOCUS</span>
+      </div>
+      <div class="timer-controls">
+        <button id="startTimer"><i class="fas fa-play"></i></button>
+        <button id="pauseTimer"><i class="fas fa-pause"></i></button>
+        <button id="resetTimer"><i class="fas fa-redo"></i></button>
+      </div>
+      <div class="pomodoro-settings">
+        <label>Work: <input type="number" id="workDuration" min="1" max="60" value="25"></label>
+        <label>Break: <input type="number" id="breakDuration" min="1" max="30" value="5"></label>
+      </div>
+    </div>
+  </section>
+
+  <section class="card card-habits">
+    <h2><i class="fas fa-calendar-check"></i> Habit Tracker</h2>
+    <div class="habits-container">
+      <form id="habitForm">
+        <input type="text" id="habitName" placeholder="Add new habit" autocomplete="off" required>
+        <button type="submit"><i class="fas fa-plus"></i> Add</button>
+      </form>
+      <div id="habitsList" class="habits-list"></div>
+      <div class="habit-stats">
+        <div class="stat-item">
+          <span class="stat-label">Completion Rate</span>
+          <span id="completionRate" class="stat-value">0%</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Habits Completed</span>
+          <span id="habitsCompleted" class="stat-value">0/0</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="settings-container">
+  <button id="settingsBtn" class="settings-btn" title="Settings">
+    <i class="fas fa-cog"></i>
+  </button>
+
+  <div id="settingsModal" class="settings-modal">
+    <div class="settings-header">
+      <h3>Dashboard Settings</h3>
+      <button id="closeSettingsBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="settings-content">
+      <div class="settings-option">
+        <button id="exportDataBtn"><i class="fas fa-download"></i> Export Data</button>
+        <p>Download all your dashboard data as a backup</p>
+      </div>
+      <div class="settings-option">
+        <button id="importDataBtn"><i class="fas fa-upload"></i> Import Data</button>
+        <p>Restore your dashboard from a backup file</p>
+        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+      </div>
+      <div class="settings-option">
+        <button id="clearDataBtn" class="danger-action"><i class="fas fa-trash-alt"></i> Clear All Data</button>
+        <p>Remove all dashboard data from this device (cannot be undone)</p>
+      </div>
+    </div>
+  </div>
+  <div id="settingsOverlay" class="settings-overlay"></div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

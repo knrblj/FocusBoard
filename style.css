@@ -1,0 +1,840 @@
+:root {
+  --primary-color: #4a90e2;
+  --background-start: #141e30;
+  --background-end: #2b32b2;
+  --card-bg: rgba(255, 255, 255, 0.1);
+  --text-color: #ffffff;
+  --text-color-dark: #f0f0f0;
+  --border-color: rgba(255, 255, 255, 0.2);
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --success-color: #5cb85c;
+  --danger-color: #d9534f;
+}
+
+.hidden {
+    display: none !important;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--background-start), var(--background-end));
+  color: var(--text-color);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto minmax(220px, auto);
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  text-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px 0 var(--shadow-color);
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-summary { grid-column: span 1; }
+.card-todo {
+  grid-column: span 2;
+  grid-row: span 2;
+  overflow: hidden; /* This is the key fix */
+}
+.card-birthday { grid-column: span 1; }
+.card-bookmarks { grid-column: span 1; grid-row: span 2; }
+.card-notes { grid-column: span 2; grid-row: span 2; }
+
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.card h2 i {
+  margin-right: 10px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="url"] {
+  box-sizing: border-box;
+  padding: 12px;
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.5);
+}
+
+button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+button:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+form {
+  display: flex;
+  gap: 10px;
+}
+
+form input {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+#todoList {
+  min-height: 0;
+  overflow-y: auto;
+  max-height: 450px;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  margin-bottom: 8px;
+}
+
+/* Summary */
+#summaryTime {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: auto;
+}
+#summaryDate {
+  text-align: center;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+/* Birthday Tracker */
+#birthdayDisplay {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+#birthdayActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+#birthdayActions button {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* To-Do List */
+.todo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.todo-header h2 {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.todo-filters {
+  display: flex;
+  gap: 10px;
+}
+.filter-btn {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.filter-btn.active {
+  background: var(--primary-color);
+  opacity: 1;
+  transform: none;
+  box-shadow: none;
+}
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: none;
+  box-shadow: none;
+}
+.todo-item {
+  gap: 10px;
+}
+.todo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-grow: 1;
+  min-width: 0; /* Prevents flex item from overflowing */
+}
+.todo-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.todo-status {
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+.todo-actions {
+  display: flex;
+  gap: 5px;
+}
+.todo-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  color: var(--text-color-dark);
+  font-size: 1rem;
+}
+.todo-actions button:hover {
+  transform: scale(1.2);
+}
+.todo-actions .todo-edit:hover { color: var(--primary-color); }
+.todo-actions .todo-toggle:hover { color: var(--success-color); }
+.todo-actions .todo-delete:hover { color: var(--danger-color); }
+.todo-actions .todo-save:hover { color: var(--success-color); }
+.todo-actions .todo-cancel:hover { color: var(--danger-color); }
+
+.todo-item.editing {
+  align-items: flex-start;
+}
+.todo-edit-view {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.todo-edit-view input {
+  width: 100%;
+  padding: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* --- Responsive Design --- */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card-summary, .card-birthday, .card-bookmarks {
+    grid-column: span 1;
+  }
+
+  .card-todo, .card-notes {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .header {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .card {
+    grid-column: span 1 !important;
+    grid-row: auto !important;
+  }
+}
+
+/* Summary Card Improvements */
+.card-summary {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#greeting {
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-align: center;
+  margin: 5px 0 15px;
+}
+
+#summaryTime {
+  font-size: 2.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px 0;
+}
+
+#summaryDate {
+  text-align: center;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+#taskCounter {
+  margin-top: 15px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+#taskCounter i {
+  color: var(--primary-color);
+}
+
+/* Age Calculator Improvements */
+.card-birthday {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.age-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.age-header i {
+  margin-right: 10px;
+  color: var(--primary-color);
+}
+
+.age-details {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.age-details p {
+  margin: 5px 0;
+}
+
+.next-birthday {
+  margin: 15px 0;
+}
+
+.birthday-progress {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--primary-color);
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+#nextBirthdayText {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+#birthdayActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: auto;
+}
+
+#birthdayActions button {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text-color);
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+#birthdayActions button:hover {
+  background: var(--primary-color);
+}
+
+/* Pomodoro Timer Styles */
+.card-pomodoro {
+  display: flex;
+  flex-direction: column;
+}
+
+.pomodoro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.timer-display {
+  font-size: 4rem;
+  font-weight: bold;
+  margin: 10px 0;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.timer-mode {
+  background: rgba(0, 0, 0, 0.15);
+  padding: 5px 15px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.timer-controls button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.pomodoro-settings {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+.pomodoro-settings label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+}
+
+.pomodoro-settings input {
+  width: 50px;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+#startTimer {
+  background-color: var(--success-color);
+}
+
+#pauseTimer {
+  background-color: var(--primary-color);
+}
+
+#resetTimer {
+  background-color: var(--danger-color);
+}
+
+#pauseTimer.disabled, #resetTimer.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.timer-mode.break {
+  background-color: rgba(92, 184, 92, 0.3);
+}
+
+.timer-mode.focus {
+  background-color: rgba(74, 144, 226, 0.3);
+}
+
+/* Habit Tracker Styles */
+.card-habits {
+  display: flex;
+  flex-direction: column;
+  grid-column: span 2;
+  overflow: hidden;
+}
+
+.habits-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.habits-list {
+  margin-top: 15px;
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: 150px;
+}
+
+.habit-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.habit-check {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  margin-right: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+}
+
+.habit-check:hover {
+  border-color: var(--success-color);
+}
+
+.habit-check.completed {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
+}
+
+.habit-name {
+  flex-grow: 1;
+  transition: opacity 0.2s;
+}
+
+.habit-item.completed .habit-name {
+  opacity: 0.6;
+}
+
+.habit-streak {
+  background: rgba(0, 0, 0, 0.15);
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-left: 10px;
+}
+
+.habit-actions {
+  margin-left: 10px;
+}
+
+.habit-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color-dark);
+  opacity: 0.7;
+  transition: all 0.2s;
+}
+
+.habit-delete:hover {
+  color: var(--danger-color);
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.habit-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+.stat-item {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* Settings Button & Modal */
+.settings-container {
+  position: relative;
+}
+
+.settings-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  color: var(--text-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.settings-btn:hover {
+  background: var(--primary-color);
+  transform: rotate(45deg);
+}
+
+.settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 1001;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.settings-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+.settings-modal {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 320px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  z-index: 1002;
+  opacity: 0;
+  transform: translateY(20px);
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.settings-modal.active {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-header h3 {
+  margin: 0;
+  font-weight: 500;
+}
+
+.settings-header button {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.settings-header button:hover {
+  color: var(--danger-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.settings-content {
+  padding: 20px;
+}
+
+.settings-option {
+  margin-bottom: 20px;
+}
+
+.settings-option:last-child {
+  margin-bottom: 0;
+}
+
+.settings-option button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.settings-option button:hover {
+  background: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.settings-option p {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+#importStatusMessage {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  display: none;
+}
+
+#importStatusMessage.success {
+  background: rgba(92, 184, 92, 0.2);
+  border: 1px solid var(--success-color);
+  display: block;
+}
+
+#importStatusMessage.error {
+  background: rgba(217, 83, 79, 0.2);
+  border: 1px solid var(--danger-color);
+  display: block;
+}
+
+.danger-action {
+  background: rgba(217, 83, 79, 0.15) !important;
+  border-color: var(--danger-color) !important;
+  color: var(--danger-color);
+}
+
+.danger-action:hover {
+  background: var(--danger-color) !important;
+  color: white;
+}
+
