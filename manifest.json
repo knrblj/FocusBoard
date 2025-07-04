@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "KB Dashboard",
+  "name": "FocusBoard",
   "version": "1.0",
   "description": "Personal dashboard with birthday tracker, bookmarks, and sticky notes.",
   "permissions": ["storage", "alarms"],

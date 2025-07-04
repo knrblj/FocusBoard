@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
       secondsEl.textContent = seconds.toString().padStart(2, "0");
 
       if (isRunning) {
-        document.title = `(${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}) ${isBreak ? 'Break' : 'Focus'} - KB Board`;
+        document.title = `(${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}) ${isBreak ? 'Break' : 'Focus'} - FocusBoard`;
       }
     }
 
