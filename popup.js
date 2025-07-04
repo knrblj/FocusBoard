@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     todos: JSON.parse(localStorage.getItem("todos")) || [],
   };
 
-  // --- Feature Initializations ---
   setupSummary();
   setupTodo();
   setupBirthdayTracker();
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupHabits();
   setupSettings();
 
-  // --- Today's Summary ---
   function setupSummary() {
     const dateEl = document.getElementById("summaryDate");
     const timeEl = document.getElementById("summaryTime");
@@ -24,17 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const now = new Date();
       const hour = now.getHours();
 
-      // Set greeting based on time of day
       let greeting = "Good Morning";
       if (hour >= 12 && hour < 17) greeting = "Good Afternoon";
       if (hour >= 17) greeting = "Good Evening";
       greetingEl.textContent = greeting + "!";
 
-      // Update date and time
       dateEl.textContent = now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       timeEl.textContent = now.toLocaleTimeString();
 
-      // Update task counter
       const pendingTasks = state.todos.filter(todo => !todo.done).length;
       taskCounterEl.textContent = pendingTasks;
     }
@@ -43,14 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateTime, 1000);
   }
 
-  // --- To-Do List ---
   function setupTodo() {
     const todoForm = document.getElementById("todoForm");
     const todoInput = document.getElementById("todoInput");
     const todoStatusInput = document.getElementById("todoStatusInput");
     const todoList = document.getElementById("todoList");
     const todoFilters = document.getElementById("todoFilters");
-    let currentFilter = 'open'; // 'all', 'open', 'closed'
+    let currentFilter = 'open';
 
     const saveTodos = () => localStorage.setItem("todos", JSON.stringify(state.todos));
 
@@ -60,11 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const filteredTodos = state.todos.filter(todo => {
         if (currentFilter === 'open') return !todo.done;
         if (currentFilter === 'closed') return todo.done;
-        return true; // for 'all'
+        return true;
       });
 
       filteredTodos.forEach(todo => {
-        const index = state.todos.indexOf(todo); // Get original index
+        const index = state.todos.indexOf(todo);
         const li = document.createElement("li");
         li.className = `todo-item ${todo.done ? 'done' : ''}`;
         const statusTag = todo.status ? `<span class="todo-status">${todo.status}</span>` : '';
@@ -154,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTodos();
   }
 
-  // --- Birthday Tracker ---
   function setupBirthdayTracker() {
     const birthdayForm = document.getElementById("birthdayForm");
     const nameInput = document.getElementById("name");
@@ -169,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const daysLeft = document.getElementById("daysLeft");
     let ageUpdateInterval;
 
-    // Create elements once instead of rebuilding HTML on each tick
     const createAgeElements = () => {
       birthdayInfo.innerHTML = `
         <p><strong id="age-years">0</strong> years, <strong id="age-months">0</strong> months</p>
@@ -183,12 +175,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const birthDate = new Date(dob);
       personName.textContent = name;
 
-      // Create elements if they don't exist
       if (!document.getElementById("age-years")) {
         createAgeElements();
       }
 
-      // Cache DOM elements to avoid repeated lookups
       const yearsEl = document.getElementById("age-years");
       const monthsEl = document.getElementById("age-months");
       const daysEl = document.getElementById("age-days");
@@ -196,11 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const minutesEl = document.getElementById("age-minutes");
       const secondsEl = document.getElementById("age-seconds");
 
-      // Pre-calculate birthday month and day
       const birthMonth = birthDate.getMonth();
       const birthDay = birthDate.getDate();
 
-      // Update age immediately before interval starts
       updateAge();
 
       ageUpdateInterval = setInterval(updateAge, 1000);
@@ -210,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const ageMS = now - birthDate;
         const ageDate = new Date(ageMS);
 
-        // Update text content instead of innerHTML
         yearsEl.textContent = ageDate.getUTCFullYear() - 1970;
         monthsEl.textContent = ageDate.getUTCMonth();
         daysEl.textContent = ageDate.getUTCDate() - 1;
@@ -218,7 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
         minutesEl.textContent = ageDate.getUTCMinutes();
         secondsEl.textContent = ageDate.getUTCSeconds();
 
-        // Calculate next birthday (once per second is fine for this)
         const nextBirthday = new Date(now.getFullYear(), birthMonth, birthDay);
         if (nextBirthday < now) {
           nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
@@ -292,26 +278,20 @@ document.addEventListener("DOMContentLoaded", () => {
     let timeLeft;
     const originalTitle = document.title;
 
-    // Initialize inputs with saved values
     workDurationInput.value = state.pomodoro.workDuration;
     breakDurationInput.value = state.pomodoro.breakDuration;
 
-    // Check if there was a running timer
     if (state.pomodoro.timerState) {
       const { isBreakSaved, timeLeftSaved, startTimeSaved, isRunningSaved } = state.pomodoro.timerState;
 
-      // Restore timer state
       isBreak = isBreakSaved;
 
       if (isRunningSaved && startTimeSaved) {
-        // Calculate elapsed time
         const currentTime = new Date().getTime();
         const elapsedSeconds = Math.floor((currentTime - startTimeSaved) / 1000);
 
-        // Adjust timeLeft based on elapsed time
         timeLeft = Math.max(0, timeLeftSaved - elapsedSeconds);
 
-        // If timer should have ended while away, handle mode switch
         if (timeLeft <= 0) {
           isBreak = !isBreak;
           timeLeft = (isBreak ? state.pomodoro.breakDuration : state.pomodoro.workDuration) * 60;
@@ -320,13 +300,11 @@ document.addEventListener("DOMContentLoaded", () => {
         updateDisplay();
         startTimer();
       } else {
-        // Timer was paused
         timeLeft = timeLeftSaved;
         updateDisplay();
         updateTimerUI(false);
       }
     } else {
-      // No saved timer state, start fresh
       resetTimer();
     }
 
@@ -353,23 +331,21 @@ document.addEventListener("DOMContentLoaded", () => {
       isRunning = true;
       updateTimerUI(true);
 
-      // Save start time
       saveTimerState();
 
       timer = setInterval(() => {
         timeLeft--;
 
         if (timeLeft <= 0) {
-          // Time's up, switch modes
           isBreak = !isBreak;
           resetTimer();
           playNotification();
-          startTimer(); // Auto-start next session
+          startTimer();
           return;
         }
 
         updateDisplay();
-        saveTimerState(); // Save state periodically
+        saveTimerState();
       }, 1000);
     }
 
@@ -388,10 +364,8 @@ document.addEventListener("DOMContentLoaded", () => {
       clearInterval(timer);
       updateTimerUI(false);
 
-      // Reset document title
       document.title = originalTitle;
 
-      // Save paused state
       saveTimerState();
     }
 
@@ -400,7 +374,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       timeLeft = (isBreak ? state.pomodoro.breakDuration : state.pomodoro.workDuration) * 60;
 
-      // Update mode display
       timerModeEl.textContent = isBreak ? "BREAK" : "FOCUS";
       timerModeEl.className = "timer-mode " + (isBreak ? "break" : "focus");
 
@@ -408,10 +381,8 @@ document.addEventListener("DOMContentLoaded", () => {
       resetTimerBtn.disabled = true;
       resetTimerBtn.classList.add("disabled");
 
-      // Save reset state
       saveTimerState();
 
-      // Reset title if not running
       if (!isRunning) {
         document.title = originalTitle;
       }
@@ -424,14 +395,12 @@ document.addEventListener("DOMContentLoaded", () => {
       minutesEl.textContent = minutes.toString().padStart(2, "0");
       secondsEl.textContent = seconds.toString().padStart(2, "0");
 
-      // Update document title with timer only when running
       if (isRunning) {
         document.title = `(${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}) ${isBreak ? 'Break' : 'Focus'} - KB Board`;
       }
     }
 
     function playNotification() {
-      // Create notification if browser supports it
       if ('Notification' in window) {
         if (Notification.permission === 'granted') {
           new Notification(isBreak ? 'Break time!' : 'Focus time!', {
@@ -442,7 +411,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Play a sound
       try {
         const audio = new Audio(chrome.runtime.getURL('notification.mp3'));
         audio.play();
@@ -451,7 +419,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Event listeners
     startTimerBtn.addEventListener("click", startTimer);
     pauseTimerBtn.addEventListener("click", pauseTimer);
     resetTimerBtn.addEventListener("click", resetTimer);
@@ -478,15 +445,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const completionRateEl = document.getElementById("completionRate");
     const habitsCompletedEl = document.getElementById("habitsCompleted");
 
-    // Initialize habits from localStorage
     let habits = JSON.parse(localStorage.getItem("habits")) || [];
 
-    // Check if we need to reset daily progress
     const lastResetDate = localStorage.getItem("habitsLastReset");
     const today = new Date().toLocaleDateString();
 
     if (lastResetDate !== today) {
-      // Reset completion status but keep the habits and their streaks
       habits = habits.map(habit => ({
         ...habit,
         completed: false
@@ -529,7 +493,6 @@ document.addEventListener("DOMContentLoaded", () => {
         habitsListEl.appendChild(li);
       });
 
-      // Add event listeners after creating elements
       document.querySelectorAll('.habit-check').forEach(checkbox => {
         checkbox.addEventListener('click', () => {
           const index = checkbox.dataset.index;
@@ -548,7 +511,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function toggleHabit(index) {
       habits[index].completed = !habits[index].completed;
 
-      // Update streak
       if (habits[index].completed) {
         habits[index].streak += 1;
       } else {
@@ -596,7 +558,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Initial render
     renderHabits();
     updateStats();
   }
@@ -611,7 +572,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const importFileInput = document.getElementById('importFileInput');
     const clearDataBtn = document.getElementById('clearDataBtn');
 
-    // Toggle settings modal
     settingsBtn.addEventListener('click', () => {
       settingsModal.classList.add('active');
       settingsOverlay.classList.add('active');
@@ -621,7 +581,6 @@ document.addEventListener("DOMContentLoaded", () => {
       settingsModal.classList.remove('active');
       settingsOverlay.classList.remove('active');
 
-      // Remove any status message if present
       const existingMessage = settingsModal.querySelector('#importStatusMessage');
       if (existingMessage) {
         existingMessage.remove();
@@ -631,28 +590,22 @@ document.addEventListener("DOMContentLoaded", () => {
     closeSettingsBtn.addEventListener('click', closeSettings);
     settingsOverlay.addEventListener('click', closeSettings);
 
-    // Export functionality
     exportDataBtn.addEventListener('click', () => {
-      // Get all data from localStorage
       const exportData = {};
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         try {
           exportData[key] = JSON.parse(localStorage.getItem(key));
         } catch (e) {
-          // If not JSON, store as string
           exportData[key] = localStorage.getItem(key);
         }
       }
 
-      // Create and download the JSON file
       const dataStr = JSON.stringify(exportData, null, 2);
       const dataBlob = new Blob([dataStr], { type: 'application/json' });
 
-      // Create a date string for the filename
       const dateStr = new Date().toISOString().split('T')[0];
 
-      // Create download link and click it
       const downloadLink = document.createElement('a');
       downloadLink.href = URL.createObjectURL(dataBlob);
       downloadLink.download = `dashboard-backup-${dateStr}.json`;
@@ -663,14 +616,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     clearDataBtn.addEventListener('click', () => {
       if (confirm("WARNING: This will permanently delete ALL your dashboard data. This action cannot be undone. Are you sure?")) {
-        // Double-check with a second confirmation
         if (confirm("Are you absolutely sure? All your tasks, habits, and settings will be erased.")) {
-          // Clear all localStorage data
           localStorage.clear();
 
           showImportStatus("All data has been cleared. Refreshing page...", false);
-
-          // Refresh the page after a short delay
           setTimeout(() => {
             window.location.reload();
           }, 1500);
@@ -678,7 +627,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Import functionality
     importDataBtn.addEventListener('click', () => {
       importFileInput.click();
     });
@@ -692,23 +640,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       reader.onload = (event) => {
         try {
-          // Parse imported JSON data
           const importedData = JSON.parse(event.target.result);
 
-          // Validate imported data
           if (!isValidBackupData(importedData)) {
             showImportStatus('Invalid backup file format. Please use a valid dashboard backup file.', false);
             return;
           }
 
-          // Restore data to localStorage
           Object.keys(importedData).forEach(key => {
             localStorage.setItem(key, JSON.stringify(importedData[key]));
           });
 
           showImportStatus('Data successfully imported! Refreshing page...', true);
 
-          // Refresh the page after a short delay to load the new data
           setTimeout(() => {
             window.location.reload();
           }, 1500);
@@ -720,34 +664,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
       reader.readAsText(file);
 
-      // Reset the input to allow selecting the same file again
       importFileInput.value = '';
     });
 
-    // Validate imported data
     function isValidBackupData(data) {
-      // Basic validation - check for expected keys
       const expectedKeys = ['todos', 'birthday', 'habits', 'pomodoro'];
 
-      // Check if at least one of the expected keys exists
       return expectedKeys.some(key => key in data);
     }
 
-    // Display import status message
     function showImportStatus(message, isSuccess) {
-      // Remove existing message if any
       const existingMessage = settingsModal.querySelector('#importStatusMessage');
       if (existingMessage) {
         existingMessage.remove();
       }
 
-      // Create status message element
       const statusEl = document.createElement('div');
       statusEl.id = 'importStatusMessage';
       statusEl.className = isSuccess ? 'success' : 'error';
       statusEl.textContent = message;
 
-      // Append after import option
       const importOption = document.querySelector('.settings-option:nth-child(2)');
       importOption.appendChild(statusEl);
     }
